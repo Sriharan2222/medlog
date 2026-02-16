@@ -1,9 +1,0 @@
-{
-    "name": "medlog",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
-        "build": "cd backend && npm ci && npx prisma generate && npx prisma db push && cd ../frontend && npm ci && npm run build",
-        "start": "cd backend && node src/index.js"
-    }
-}
