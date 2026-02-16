@@ -5,7 +5,7 @@
     "main": "src/index.js",
     "scripts": {
         "start": "node src/index.js",
-        "build": "npx prisma generate && npx prisma db push",
+        "build": "npx prisma generate && npx prisma db push && cd ../frontend && npm ci && npm run build",
         "dev": "node src/index.js",
         "db:generate": "npx prisma generate",
         "db:push": "npx prisma db push",
