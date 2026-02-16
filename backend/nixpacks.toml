@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ['nodejs_18']
+
+[phases.install]
+cmds = ['npm ci', 'cd ../frontend && npm ci']
+
+[phases.build]
+cmds = [
+    'npx prisma generate',
+    'npx prisma db push',
+    'cd ../frontend && NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL npm run build'
+]
+
+[start]
+cmd = 'node src/index.js'
