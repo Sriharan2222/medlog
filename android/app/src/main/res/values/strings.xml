@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MedLog</string>
+    <string name="error_title">Cannot Connect</string>
+    <string name="error_message">Please check your internet connection and try again</string>
+    <string name="retry">Try Again</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/primary" />
+    <foreground>
+        <inset android:inset="25%">
+            <vector
+                android:width="108dp"
+                android:height="108dp"
+                android:viewportWidth="108"
+                android:viewportHeight="108">
+                <!-- Heart shape -->
+                <path
+                    android:fillColor="#FFFFFF"
+                    android:pathData="M54,30 C60,30 72,36 72,50 C72,64 54,78 54,78 C54,78 36,64 36,50 C36,36 48,30 54,30Z" />
+                <!-- Plus/Cross inside heart -->
+                <path
+                    android:fillColor="#1a365d"
+                    android:pathData="M50,46 L58,46 L58,50 L50,50Z" />
+                <path
+                    android:fillColor="#1a365d"
+                    android:pathData="M52,44 L56,44 L56,52 L52,52Z" />
+            </vector>
+        </inset>
+    </foreground>
+</adaptive-icon>
