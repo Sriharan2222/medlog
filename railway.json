@@ -2,10 +2,10 @@
     "$schema": "https://railway.app/railway.schema.json",
     "build": {
         "builder": "NIXPACKS",
-        "buildCommand": "cd backend && npm ci && npx prisma generate && npx prisma db push && cd ../frontend && npm ci && NEXT_PUBLIC_API_URL=https://medlog-production.up.railway.app/api npm run build"
+        "buildCommand": "cd backend && npm ci && npx prisma generate && npx prisma db push && cd ../frontend && npm ci && NEXT_PUBLIC_API_URL=https://medlog-production.up.railway.app/api npm run build && echo 'Frontend build complete'"
     },
     "deploy": {
-        "startCommand": "cd backend && node src/index.js",
+        "startCommand": "node backend/src/index.js",
         "restartPolicyType": "ON_FAILURE",
         "restartPolicyMaxRetries": 10
     }
