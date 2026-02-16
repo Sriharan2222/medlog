@@ -1,0 +1,25 @@
+{
+    "name": "medlog-backend",
+    "version": "1.0.0",
+    "description": "MedLog - Medication Logging & Access System Backend",
+    "main": "src/index.js",
+    "scripts": {
+        "dev": "node src/index.js",
+        "db:generate": "npx prisma generate",
+        "db:push": "npx prisma db push",
+        "db:seed": "node prisma/seed.js"
+    },
+    "dependencies": {
+        "@prisma/client": "^6.4.1",
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "express": "^4.21.2",
+        "jsonwebtoken": "^9.0.2",
+        "qrcode": "^1.5.4",
+        "uuid": "^11.1.0"
+    },
+    "devDependencies": {
+        "prisma": "^6.4.1"
+    }
+}

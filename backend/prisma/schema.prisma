@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         String   // DOCTOR or PATIENT
+  createdAt    DateTime @default(now())
+
+  doctor  Doctor?
+  patient Patient?
+  auditLogs AuditLog[]
+}
+
+model Doctor {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  name           String
+  hospital       String
+  regNumber      String
+  specialization String   @default("")
+
+  user           User           @relation(fields: [userId], references: [id])
+  prescriptions  Prescription[]
+  changeRequests ChangeRequest[]
+}
+
+model Patient {
+  id              String   @id @default(uuid())
+  uniquePatientId String   @unique
+  userId          String   @unique
+  name            String
+  age             Int      @default(0)
+  gender          String   @default("")
+  phone           String   @default("")
+  qrToken         String   @unique @default(uuid())
+
+  user           User           @relation(fields: [userId], references: [id])
+  prescriptions  Prescription[]
+  changeRequests ChangeRequest[]
+}
+
+model Prescription {
+  id             String   @id @default(uuid())
+  patientId      String
+  doctorId       String
+  medicationName String
+  dosage         String
+  frequency      String
+  duration       String
+  notes          String   @default("")
+  status         String   @default("ACTIVE") // ACTIVE, EXPIRED, REPLACED
+  prescribedAt   DateTime @default(now())
+  expiresAt      DateTime?
+
+  patient        Patient        @relation(fields: [patientId], references: [id])
+  doctor         Doctor         @relation(fields: [doctorId], references: [id])
+  changeRequests ChangeRequest[]
+}
+
+model ChangeRequest {
+  id              String    @id @default(uuid())
+  patientId       String
+  doctorId        String
+  prescriptionId  String
+  reason          String
+  doctorResponse  String    @default("")
+  status          String    @default("PENDING") // PENDING, RESPONDED, DISMISSED
+  createdAt       DateTime  @default(now())
+  respondedAt     DateTime?
+
+  patient      Patient      @relation(fields: [patientId], references: [id])
+  doctor       Doctor       @relation(fields: [doctorId], references: [id])
+  prescription Prescription @relation(fields: [prescriptionId], references: [id])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String   @default("")
+  details   String   @default("")
+  timestamp DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}
