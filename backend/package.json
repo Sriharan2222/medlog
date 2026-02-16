@@ -4,6 +4,8 @@
     "description": "MedLog - Medication Logging & Access System Backend",
     "main": "src/index.js",
     "scripts": {
+        "start": "node src/index.js",
+        "build": "npx prisma generate && npx prisma db push",
         "dev": "node src/index.js",
         "db:generate": "npx prisma generate",
         "db:push": "npx prisma db push",
