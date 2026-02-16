@@ -40,23 +40,42 @@ app.use((err, req, res, next) => {
 });
 
 // In production, start Next.js standalone server and proxy non-API requests to it
-const nextStandalonePath = path.join(__dirname, '../../frontend/.next/standalone/frontend/server.js');
-if (fs.existsSync(nextStandalonePath)) {
-    console.log('🌐 Starting Next.js frontend server...');
+const possiblePaths = [
+    path.join(__dirname, '../../frontend/.next/standalone/frontend/server.js'),
+    path.join(__dirname, '../../frontend/.next/standalone/server.js'),
+    path.resolve('/app/frontend/.next/standalone/frontend/server.js'),
+    path.resolve('/app/frontend/.next/standalone/server.js'),
+];
+
+let nextStandalonePath = null;
+for (const p of possiblePaths) {
+    console.log(`Checking: ${p} -> ${fs.existsSync(p) ? 'EXISTS' : 'not found'}`);
+    if (fs.existsSync(p)) { nextStandalonePath = p; break; }
+}
+
+if (nextStandalonePath) {
+    // Copy static files for Next.js
+    const staticSrc = path.join(path.dirname(nextStandalonePath), '../static');
+    const publicSrc = path.join(path.dirname(nextStandalonePath), '../../public');
+    console.log(`🌐 Starting Next.js frontend server from: ${nextStandalonePath}`);
     const nextServer = spawn('node', [nextStandalonePath], {
         env: { ...process.env, PORT: '3000', HOSTNAME: '0.0.0.0' },
         stdio: 'inherit'
     });
     nextServer.on('error', (err) => console.error('Next.js server error:', err));
 
-    // Proxy all non-API requests to the Next.js server
-    app.use('/', createProxyMiddleware({
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        ws: true,
-        filter: (req) => !req.path.startsWith('/api')
-    }));
-    console.log('🔗 Frontend proxied from Next.js standalone server');
+    // Give Next.js 2 seconds to boot before proxying
+    setTimeout(() => {
+        app.use('/', createProxyMiddleware({
+            target: 'http://127.0.0.1:3000',
+            changeOrigin: true,
+            ws: true,
+            filter: (req) => !req.path.startsWith('/api')
+        }));
+        console.log('🔗 Frontend proxied from Next.js standalone server');
+    }, 2000);
+} else {
+    console.log('ℹ️ No Next.js standalone build found — running API-only mode');
 }
 
 app.listen(PORT, '0.0.0.0', () => {
